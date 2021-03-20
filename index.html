@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rádio Gilvan</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="d-flex flex-column justify-content-center align-items-center min-vh-100">
+      <h1 class="mb-3">Rádio Gilvan</h1>
+      <div class="row mb-3">
+        <div class="col-auto">
+          <button class="btn btn-primary" id="play-button">
+            <i class="bi bi-play-fill"></i>
+          </button>
+          <button class="btn btn-primary d-none" id="stop-button">
+            <i class="bi bi-stop-fill"></i>
+          </button>
+          <button class="btn btn-danger d-none" id="error-button" disabled>
+            <i class="bi bi-emoji-frown-fill"></i>
+          </button>
+        </div>
+        <div class="col">
+          <div class="d-flex h-100 align-items-center">
+            <input class="form-range" type="range" id="volume-input" min="0" max="10" value="10" />
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="d-flex h-100 align-items-center">
+            <span id="volume-span">100%</span>
+          </div>
+        </div>
+      </div>
+      <p>
+        Entre no grupo do Whatsapp para pedir músicas, realizar comentários ou
+        só bater um papo!
+      </p>
+      <p>
+        <a class="btn btn-success" href="https://chat.whatsapp.com/EvdJ7201P6C80LZ9oMVOwX" target="_blank"
+          rel="noopener noreferrer">
+          <i class="bi bi-whatsapp"></i> Rádio Gilvan
+        </a>
+      </p>
+    </div>
+  </div>
+  <script>
+    const audio = new Audio('https://Fps2.listen2myradio.com:2199/listen.php?ip=109.169.23.17&port=8173&type=ice&mount=stream')
+
+    const volumeInput = document.getElementById('volume-input')
+    const volumeSpan = document.getElementById('volume-span')
+    const playButton = document.getElementById('play-button')
+    const stopButton = document.getElementById('stop-button')
+    const errorButton = document.getElementById('error-button')
+
+    const handleVolumeChange = (changeEvent) => {
+      const value = Number(changeEvent.target.value)
+      audio.volume = value / 10
+      volumeSpan.innerText = `${value * 10}%`
+    }
+
+    const handlePlay = (mouseEvent) => {
+      const onResolved = () => {
+        playButton.classList.add('d-none')
+        stopButton.classList.remove('d-none')
+      }
+
+      const onRejected = (error) => {
+        playButton.classList.add('d-none')
+        errorButton.classList.remove('d-none')
+        volumeInput.disabled = true
+      }
+
+      audio.play().then(onResolved).catch(onRejected)
+    }
+
+    const handleStop = (mouseEvent) => {
+      audio.pause()
+      stopButton.classList.add('d-none')
+      playButton.classList.remove('d-none')
+    }
+
+    volumeInput.addEventListener('change', handleVolumeChange)
+    playButton.addEventListener('click', handlePlay)
+    stopButton.addEventListener('click', handleStop)
+  </script>
+</body>
+
+</html>
